@@ -1,0 +1,67 @@
+.footer {
+  background-color: var(--color-secondary);
+  padding: 4rem 0 2rem;
+  margin-top: 4rem;
+  color: var(--color-text);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.column h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary-dark);
+}
+
+.column p {
+  color: var(--color-text-light);
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.linkList {
+  list-style: none;
+}
+
+.linkList li {
+  margin-bottom: 0.75rem;
+}
+
+.linkList a {
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+}
+
+.linkList a:hover {
+  color: var(--color-primary-dark);
+}
+
+.bottomBar {
+  border-top: 1px solid var(--color-border);
+  padding-top: 2rem;
+  text-align: center;
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+}
+
+.logo {
+  font-family: var(--font-logo);
+  font-size: 3.5rem;
+  font-weight: 400;
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  line-height: 1;
+}
