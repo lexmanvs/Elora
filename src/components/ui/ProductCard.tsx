@@ -15,26 +15,51 @@ export interface ProductCardProps {
 export default function ProductCard({ id, name, price, images, category }: ProductCardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Setup intersection observer to detect when card is naturally in view (for mobile auto-play)
   useEffect(() => {
-    if (isHovered && images.length > 1) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.7 } // Trigger when 70% of the card is visible on screen
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      if (cardRef.current) observer.unobserve(cardRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Determine if it's a touch device
+    const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const shouldAnimate = isHovered || (isTouchDevice && isVisible);
+
+    if (shouldAnimate && images.length > 1) {
       intervalRef.current = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
-      }, 1500); // Change image every 1.5 seconds on hover
+      }, 1500); // Change image every 1.5 seconds if active
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      setCurrentIndex(0); // Reset to main image on mouse leave
+      setCurrentIndex(0); // Reset to main image when inactive
     }
     
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isHovered, images.length]);
+  }, [isHovered, isVisible, images.length]);
 
   return (
     <Link 
       href={`/product/${id}`} 
+      ref={cardRef}
       className={styles.card}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

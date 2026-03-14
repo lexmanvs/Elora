@@ -36,9 +36,6 @@
 
 .image.active {
   opacity: 1;
-}
-
-.card:hover .image.active {
   transform: scale(1.05);
 }
 
