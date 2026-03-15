@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import OrderStatusSelect from "./OrderStatusSelect";
 import ShareOrderLink from "./ShareOrderLink";
+import CopyTrackingId from "./CopyTrackingId";
 
 export default async function OrdersAdmin() {
   const orders = await prisma.order.findMany({
@@ -33,9 +34,10 @@ export default async function OrdersAdmin() {
                 <div key={order.id} style={{ border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)", padding: "1.5rem" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px dashed var(--color-border)" }}>
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.25rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.25rem" }}>
                         <h3 style={{ fontSize: "1.1rem", margin: 0 }}>Order {order.orderNumber}</h3>
                         <ShareOrderLink orderId={order.id} />
+                        <CopyTrackingId trackingId={order.id} />
                       </div>
                       <p style={{ fontSize: "0.85rem", color: "var(--color-text-light)", marginTop: "0.5rem" }}>Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
                     </div>
