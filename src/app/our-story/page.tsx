@@ -12,7 +12,7 @@ export default function OurStoryPage() {
       
       <div className={styles.storyContent}>
         <div className={styles.storyImages}>
-          <img src="https://images.unsplash.com/photo-1558769132-cb1fac0840c2?q=80&w=2000&auto=format&fit=crop" alt="Elora Atelier" className={styles.mainImage} />
+          <img src="/elora_story_logo.jpg" alt="Elora Atelier" className={styles.mainImage} />
         </div>
         
         <div className={styles.textContent}>

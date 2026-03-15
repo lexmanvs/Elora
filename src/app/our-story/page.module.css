@@ -41,11 +41,10 @@
 .mainImage {
   width: 100%;
   height: auto;
-  min-height: 400px;
-  max-height: 700px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-white);
 }
 
 .textContent {
