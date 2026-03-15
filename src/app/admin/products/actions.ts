@@ -20,12 +20,26 @@ export async function addProduct(formData: FormData) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
-      const uploadDir = join(process.cwd(), 'public/uploads/products');
-      const filepath = join(uploadDir, filename);
+      let uploadDir = join(process.cwd(), 'public/uploads/products');
+      let filepath = join(uploadDir, filename);
+      let publicUrl = `/uploads/products/${filename}`;
       
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(filepath, buffer);
-      uploadedUrls.push(`/uploads/products/${filename}`);
+      try {
+        await mkdir(uploadDir, { recursive: true });
+        await writeFile(filepath, buffer);
+      } catch (err: any) {
+        if (err.code === 'EROFS' || process.env.VERCEL) {
+          uploadDir = '/tmp/uploads/products';
+          filepath = join(uploadDir, filename);
+          publicUrl = `/api/uploads/${filename}`;
+          await mkdir(uploadDir, { recursive: true });
+          await writeFile(filepath, buffer);
+        } else {
+          throw err;
+        }
+      }
+      
+      uploadedUrls.push(publicUrl);
     }
   }
 
@@ -78,12 +92,26 @@ export async function updateProduct(formData: FormData) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
-      const uploadDir = join(process.cwd(), 'public/uploads/products');
-      const filepath = join(uploadDir, filename);
+      let uploadDir = join(process.cwd(), 'public/uploads/products');
+      let filepath = join(uploadDir, filename);
+      let publicUrl = `/uploads/products/${filename}`;
       
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(filepath, buffer);
-      uploadedUrls.push(`/uploads/products/${filename}`);
+      try {
+        await mkdir(uploadDir, { recursive: true });
+        await writeFile(filepath, buffer);
+      } catch (err: any) {
+        if (err.code === 'EROFS' || process.env.VERCEL) {
+          uploadDir = '/tmp/uploads/products';
+          filepath = join(uploadDir, filename);
+          publicUrl = `/api/uploads/${filename}`;
+          await mkdir(uploadDir, { recursive: true });
+          await writeFile(filepath, buffer);
+        } else {
+          throw err;
+        }
+      }
+      
+      uploadedUrls.push(publicUrl);
     }
   }
 
