@@ -16,3 +16,12 @@ export async function updateOrderStatus(formData: FormData) {
   
   revalidatePath("/admin/orders");
 }
+
+export async function deleteOrder(formData: FormData) {
+  const id = formData.get("id") as string;
+  if (!id) return;
+  
+  await prisma.order.delete({ where: { id } });
+  
+  revalidatePath("/admin/orders");
+}

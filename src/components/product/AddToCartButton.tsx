@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
 interface Props {
   product: {
@@ -15,11 +16,27 @@ interface Props {
 }
 
 export default function AddToCartButton({ product, availableSizes }: Props) {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
+  const router = useRouter();
+  
+  // Check if item is already in cart on mount
   const [added, setAdded] = useState(false);
   const [selectedSize, setSelectedSize] = useState(availableSizes.length > 0 ? availableSizes[0] : "");
 
-  const handleAdd = () => {
+  useEffect(() => {
+    // Determine if this exact product is in the cart
+    const isAlreadyInCart = cart.some(item => item.id === product.id);
+    if (isAlreadyInCart) {
+      setAdded(true);
+    }
+  }, [cart, product.id]);
+
+  const handleAction = () => {
+    if (added) {
+      router.push("/cart");
+      return;
+    }
+
     if (availableSizes.length > 0 && !selectedSize) {
       alert("Please select a size");
       return;
@@ -27,7 +44,6 @@ export default function AddToCartButton({ product, availableSizes }: Props) {
     
     addToCart({ ...product, size: selectedSize });
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
   };
 
   return (
@@ -61,9 +77,9 @@ export default function AddToCartButton({ product, availableSizes }: Props) {
         size="lg" 
         variant={added ? "secondary" : "primary"} 
         fullWidth 
-        onClick={handleAdd}
+        onClick={handleAction}
       >
-        {added ? "Added to Cart" : "Add to Cart"}
+        {added ? "Go to Cart" : "Add to Cart"}
       </Button>
     </div>
   );

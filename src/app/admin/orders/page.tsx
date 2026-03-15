@@ -2,6 +2,7 @@ import prisma from "@/lib/db";
 import OrderStatusSelect from "./OrderStatusSelect";
 import ShareOrderLink from "./ShareOrderLink";
 import CopyTrackingId from "./CopyTrackingId";
+import { deleteOrder } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,12 @@ export default async function OrdersAdmin() {
                         <h3 style={{ fontSize: "1.1rem", margin: 0 }}>Order {order.orderNumber}</h3>
                         <ShareOrderLink orderId={order.id} />
                         <CopyTrackingId trackingId={order.id} />
+                        <form action={deleteOrder}>
+                          <input type="hidden" name="id" value={order.id} />
+                          <button type="submit" style={{ cursor: "pointer", padding: "0.4rem 0.75rem", fontSize: "0.80rem", background: "rgba(217, 83, 79, 0.1)", color: "var(--color-error)", borderRadius: "var(--radius-sm)", border: "none" }}>
+                            Delete
+                          </button>
+                        </form>
                       </div>
                       <p style={{ fontSize: "0.85rem", color: "var(--color-text-light)", marginTop: "0.5rem" }}>Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
                     </div>
