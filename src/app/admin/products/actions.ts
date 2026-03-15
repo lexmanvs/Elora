@@ -2,8 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { supabase } from "@/lib/supabase";
 
 export async function addProduct(formData: FormData) {
   const name = formData.get("name") as string;
@@ -18,28 +17,22 @@ export async function addProduct(formData: FormData) {
   for (const file of imageFiles) {
     if (file instanceof File && file.size > 0 && file.name && file.name !== 'undefined') {
       const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
-      let uploadDir = join(process.cwd(), 'public/uploads/products');
-      let filepath = join(uploadDir, filename);
-      let publicUrl = `/uploads/products/${filename}`;
       
-      try {
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(filepath, buffer);
-      } catch (err: any) {
-        if (err.code === 'EROFS' || process.env.VERCEL) {
-          uploadDir = '/tmp/uploads/products';
-          filepath = join(uploadDir, filename);
-          publicUrl = `/api/uploads/${filename}`;
-          await mkdir(uploadDir, { recursive: true });
-          await writeFile(filepath, buffer);
-        } else {
-          throw err;
-        }
+      const { data, error } = await supabase.storage
+        .from('products')
+        .upload(filename, bytes, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (error) {
+        console.error("Supabase upload error:", error);
+        throw new Error("Failed to upload image to Supabase");
       }
       
-      uploadedUrls.push(publicUrl);
+      const { data: publicUrlData } = supabase.storage.from('products').getPublicUrl(filename);
+      uploadedUrls.push(publicUrlData.publicUrl);
     }
   }
 
@@ -90,28 +83,22 @@ export async function updateProduct(formData: FormData) {
   for (const file of imageFiles) {
     if (file instanceof File && file.size > 0 && file.name && file.name !== 'undefined') {
       const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
-      let uploadDir = join(process.cwd(), 'public/uploads/products');
-      let filepath = join(uploadDir, filename);
-      let publicUrl = `/uploads/products/${filename}`;
       
-      try {
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(filepath, buffer);
-      } catch (err: any) {
-        if (err.code === 'EROFS' || process.env.VERCEL) {
-          uploadDir = '/tmp/uploads/products';
-          filepath = join(uploadDir, filename);
-          publicUrl = `/api/uploads/${filename}`;
-          await mkdir(uploadDir, { recursive: true });
-          await writeFile(filepath, buffer);
-        } else {
-          throw err;
-        }
+      const { data, error } = await supabase.storage
+        .from('products')
+        .upload(filename, bytes, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (error) {
+        console.error("Supabase upload error:", error);
+        throw new Error("Failed to upload image to Supabase");
       }
       
-      uploadedUrls.push(publicUrl);
+      const { data: publicUrlData } = supabase.storage.from('products').getPublicUrl(filename);
+      uploadedUrls.push(publicUrlData.publicUrl);
     }
   }
 
