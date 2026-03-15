@@ -16,7 +16,7 @@ export async function addProduct(formData: FormData) {
   
   const uploadedUrls: string[] = [];
   for (const file of imageFiles) {
-    if (file.size > 0 && file.name) {
+    if (file instanceof File && file.size > 0 && file.name && file.name !== 'undefined') {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
@@ -74,7 +74,7 @@ export async function updateProduct(formData: FormData) {
   
   const uploadedUrls: string[] = [];
   for (const file of imageFiles) {
-    if (file.size > 0 && file.name) {
+    if (file instanceof File && file.size > 0 && file.name && file.name !== 'undefined') {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
