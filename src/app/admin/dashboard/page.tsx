@@ -1,5 +1,7 @@
 import prisma from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardOverview() {
   const productsCount = await prisma.product.count();
   const ordersCount = await prisma.order.count();

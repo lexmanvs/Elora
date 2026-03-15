@@ -4,6 +4,8 @@ import Button from "@/components/ui/Button";
 import ProductCard from "@/components/ui/ProductCard";
 import prisma from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // Server Component fetching from DB
 export default async function Home() {
   // Fetch some products for the "Featured" section

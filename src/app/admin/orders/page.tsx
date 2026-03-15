@@ -3,6 +3,8 @@ import OrderStatusSelect from "./OrderStatusSelect";
 import ShareOrderLink from "./ShareOrderLink";
 import CopyTrackingId from "./CopyTrackingId";
 
+export const dynamic = "force-dynamic";
+
 export default async function OrdersAdmin() {
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: 'desc' }
