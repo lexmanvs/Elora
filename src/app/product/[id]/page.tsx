@@ -5,6 +5,8 @@ import Link from "next/link";
 import { FiChevronLeft } from "react-icons/fi";
 import prisma from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }

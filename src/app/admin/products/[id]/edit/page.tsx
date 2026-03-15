@@ -4,6 +4,8 @@ import prisma from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
